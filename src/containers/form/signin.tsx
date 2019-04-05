@@ -4,21 +4,13 @@ import { FormComponentProps } from 'antd/lib/form/Form'
 import { formatMessage } from 'umi-plugin-locale'
 
 
-export class SigninForm extends React.Component<FormComponentProps> {
-    handleSubmit (e: React.FormEvent) {
-        console.log(e)
-        this.props.form.validateFields((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-            } else {
-                console.log('Form errors', err)
-            }
-        })
-    }
+type Props = FormComponentProps & React.RefObject<HTMLElement>
+
+export class SigninForm extends React.Component<Props> {
     render () {
         const { getFieldDecorator } = this.props.form
         return (
-            <Form onSubmit={e => this.handleSubmit(e)}>
+            <Form>
                 <Form.Item>
                     { getFieldDecorator(
                         'username',
