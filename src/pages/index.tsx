@@ -1,15 +1,17 @@
-import React from 'react';
-import styles from './index.css';
-import { formatMessage } from 'umi-plugin-locale';
-import Title from 'antd/lib/typography/Title';
+import React from 'react'
+import { Typography } from 'antd'
+const { Title, Paragraph } = Typography
 
-import withRouter from 'umi/withRouter';
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { formatMessage } from 'umi-plugin-locale'
+
+import styles from './index.css'
 
 
 export default function() {
-  return (
-    <Title>{formatMessage({id: 'pageTitle.home'})}</Title>
-  )
+  return (<>
+        <Title>{formatMessage({id: 'pageTitle.home'})}</Title>
+        <Paragraph>
+            Мы ещё не решили, что будет на главной странице.
+        </Paragraph>
+    </>)
 }
-
