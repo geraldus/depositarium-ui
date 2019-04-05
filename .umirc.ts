@@ -3,6 +3,8 @@ import path from 'path'
 
 // ref: https://umijs.org/config/
 const config: IConfig =  {
+  publicPath: '/static/js/ioa-ui/',
+  runtimePublicPath: true,
   chainWebpack: function (config, { webpack }) {
       config.resolve.alias.set('@', path.resolve(__dirname, 'src'))
   },
