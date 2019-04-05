@@ -5,6 +5,7 @@ export default {
     'pageTitle.signin': 'Вход',
     'general.cancel': 'Отмена',
     'general.signin': 'Войти',
+    'general.signout': 'Выйти',
     'general.depositIn': 'Ввод',
     'general.deposit': 'Пополнение',
     'general.withdrawal': 'Вывод',
