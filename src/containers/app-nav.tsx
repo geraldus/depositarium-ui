@@ -9,108 +9,48 @@ import { formatMessage } from 'umi-plugin-locale'
 
 import styles from 'antd/dist/antd.css'
 
-
-/** FIXME: Handle Auth somewhere else */
-
-const initialState = {
-    signinForm: false
+interface ClickHandler {
+    handleSigninClick?: React.MouseEventHandler
 }
 
-type State = typeof initialState
+const defaultProps = {
+    auth: false
+}
+type Props = Partial<UserContext> & Partial<ClickHandler>
 
-export class AppNav extends React.Component<{}, State> {
-    static contextType = AuthContext
-    readonly state = initialState
-    private signinFormRef = createRef<SigninForm>()
-    saveSigninFormRef (formRef: SigninForm) {
-        this.signinFormRef = formRef
-    }
-    signinFormShow (e: React.MouseEvent<HTMLElement>) {
-        e.preventDefault()
-        this.setState({ signinForm: true })
-    }
-    handleSigninFormClose () {
-        this.setState({ signinForm: false })
-    }
-    handleAuthResult () {
-        const form = this.signinFormRef.props.form
-        // TODO: Provide type for 'r'
-        switch (r.status) {
-            case 'fail':
-                form.setFields({ password: {
-                    value: form.getFieldValue('password'),
-                    errors: [new Error(r.message)]
-                }})
-            break
-            case 'ok': {
-
-            }
-        }
-
-    }
-    signin (e: React.FormEvent) {
-        const form = this.signinFormRef.props.form
-        form.validateFields((err, values) => {
-            if (!err) {
-                console.log(values)
-                const formData = new FormData()
-                formData.append('username', values['username'])
-                formData.append('password', values['password'])
-                fetch('/auth/page/prizm-json-plugin/login?_accept=application/json', {
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(r => r.json())
-                    .then(j => {
-                        this.handleAuthResult(j)
-                    })
-                    .catch(e => console.log(e))
-            }
-        })
-    }
-    appNav () {
-        return ((c: UserContext) => {
-            console.log('test context', c, this)
-            return (<>
-                <Menu
-                        defaultSelectedKeys={['1']}
-                        mode='horizontal'
-                        theme='dark' >
-                    <Menu.Item style={{float: 'left'}}>
-                        <NavLink to='/'>
-                            {formatMessage({id: 'pageTitle.home'})}
-                        </NavLink>
-                    </Menu.Item>
-                    {!c.auth &&
-                        <a
-                                href='/auth/login'
-                                onClick={e => this.signinFormShow(e)}
-                                style={{float: 'right'}}>
-                            {formatMessage({id: 'pageTitle.signin'})}
-                        </a>
-                    }
-                </Menu>
-                <Modal
-                        title={formatMessage({id: 'pageTitle.signin'})}
-                        visible={this.state.signinForm}
-                        centered
-                        destroyOnClose={true}
-                        okText={formatMessage({id: 'general.signin'})}
-                        cancelText={formatMessage({id: 'general.cancel'})}
-                        onOk={e => this.signin(e)}
-                        onCancel={e => this.handleSigninFormClose()}
-                    >
-                    <WrappedSigninForm
-                        wrappedComponentRef={(ref: SigninForm) => this.saveSigninFormRef(ref)}
-                        />
-                </Modal>
-            </>)
-        })
-    }
+export class AppNav extends React.Component<Props> {
+    static readonly defaultProps = defaultProps
     render () {
         console.log(this, window)
-        return (<AuthConsumer>
-            {this.appNav()}
-        </AuthConsumer>)
+        const handleSignin = this.props.handleSigninClick
+                ? this.props.handleSigninClick
+                : () => {}
+        return (
+            <Menu
+                    defaultSelectedKeys={['1']}
+                    mode='horizontal'
+                    theme='dark' >
+                <Menu.Item style={{float: 'left'}}>
+                    <NavLink to='/'>
+                        {formatMessage({id: 'pageTitle.home'})}
+                    </NavLink>
+                </Menu.Item>
+                {!this.props.auth &&
+                    <a
+                            href='/auth/login'
+                            onClick={e => handleSignin(e)}
+                            style={{float: 'right'}}>
+                        {formatMessage({id: 'pageTitle.signin'})}
+                    </a>
+                }
+                {this.props.auth &&
+                    <a
+                            href='/auth/logout'
+                            style={{float: 'right'}}>
+                        {formatMessage({id: 'general.signout'})}
+                    </a>
+                }
+                </Menu>
+        )
     }
 }
