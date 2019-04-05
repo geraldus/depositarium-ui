@@ -2,7 +2,7 @@ import mockjs from 'mockjs'
 import moment from 'moment'
 
 const x = moment().subtract(30, 'days')
-const y = moment().subtract(8, 'days')
+const y = moment().subtract(11, 'days')
 
 
 export default {
