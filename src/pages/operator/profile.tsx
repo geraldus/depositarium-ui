@@ -60,7 +60,7 @@ class Profile extends React.Component<State> {
                         para: (vPzm * Math.pow(
                                 monthlyCompoundInterest,
                                 pzmDeltaT / monthMs
-                            ) - vPzm).toFixed(14)
+                            ) - vPzm).toFixed(12)
                     },
                     rur: {
                         para: vRur * montlySimpleInterest / 3 * rurDays,
