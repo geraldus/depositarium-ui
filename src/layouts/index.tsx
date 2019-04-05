@@ -124,4 +124,4 @@ export default withRouter(({ location, children }) =>
             </CSSTransition>
         </TransitionGroup>
     </AuthProvider>
-    )
+)
