@@ -1,34 +1,35 @@
 
 import React from 'react';
 import { Row, Col, Typography, Icon } from 'antd'
+import { BalanceInfo } from '@/containers/operator/profile/balance-info'
+import History from '@/containers/operator/profile/balance/history'
+import { PzmParamineInfo, RurParamineInfo } from '@/containers/operator/profile/balance/paramining'
+
 import 'whatwg-fetch'
 import _ from 'lodash'
-
-import { BalanceInfo } from '@/containers/operator/profile/balance-info'
+import { formatMessage } from 'umi-plugin-locale'
+import moment from 'moment'
 
 import styles from './profile.css'
-import { formatMessage } from 'umi-plugin-locale';
 
 
 
-const { Title, Text } = Typography
-
+const montlySimpleInterest = 0.21
 const monthlyCompoundInterest = 1.25
-// const dailyCompoundInterest = Math.pow(monthlyCompoundInterest, 1/30)
 const dayMs = 24 * 60 * 60 * 1000
 const monthMs = 30 * dayMs
-const msCompoundInterest = Math.pow(monthlyCompoundInterest, 1 / monthMs)
 
 const initialState = {
     balance: {
         rur: {
             value: 0,
-            date: (new Date()).getTime(),
-            para: 0
+            date: moment().valueOf(),
+            para: 0,
+            nextDate: 0
         },
         pzm: {
             value: 0,
-            date: (new Date()).getTime(),
+            date: moment().valueOf(),
             para: 0
         }
     },
@@ -36,51 +37,52 @@ const initialState = {
     test: ''
 }
 
-const defaultProps = {
-    api: {
-        profile: '/api/operator/profile',
-        balance: '/api/operator/balance'
-    },
-    labels: {
-        deposit: 'Пополнение',
-        withdrawal: 'Вывод',
-        startDate: 'Дата отсчёта'
-    }
-}
 
 type State = Readonly<typeof initialState>
-type Props = typeof defaultProps
 
 
-class Profile extends React.Component<Props, State> {
-    static defaultProps = defaultProps
-    readonly state: State = initialState
+class Profile extends React.Component<State> {
+    readonly state = initialState
     paramine (currentTime: number) {
         const h = requestAnimationFrame(e => this.paramine(e))
-        this.setState(s => {
+        this.setState((s: State) => {
             const { balance: { pzm, rur } } = s
-            const v = s.balance.pzm.value
-            const diffMsT = (new Date()).getTime() - s.balance.pzm.date
+            const vPzm = pzm.value
+            const vRur = rur.value
+            const now = moment()
+            const pzmDeltaT = now.valueOf() - pzm.date
+            const rurDeltaT = now.valueOf() - rur.date
+            const rurDays = Math.floor(rurDeltaT / (10 * dayMs))
+            const next = moment().add(rurDays + 1, 'days')
             return _.merge({}, s, {
                 balance: {
                     pzm: {
-                        para: v * Math.pow(monthlyCompoundInterest, diffMsT / monthMs) - v
+                        para: (vPzm * Math.pow(
+                                monthlyCompoundInterest,
+                                pzmDeltaT / monthMs
+                            ) - vPzm).toFixed(14)
+                    },
+                    rur: {
+                        para: vRur * montlySimpleInterest / 3 * rurDays,
+                        nextDate: next.valueOf()
                     }
                 },
                 requestAnimationFrameH: h,
-                test: `${diffMsT / monthMs}; ${s.balance.pzm.value}; ${s.balance.pzm.value * Math.pow(monthlyCompoundInterest, 1/ (diffMsT / monthMs))}`
             })
         })
     }
     componentDidMount(){
-        fetch(this.props.api.profile)
-            .then(r => r.json()).then(j => {
-                const h = requestAnimationFrame(e => this.paramine(e))
-                this.setState({
-                    ... j,
-                    requestAnimationFrameH: h
+        setTimeout(() => {
+            fetch('/api/operator/profile')
+                .then(r => r.json())
+                .then(j => {
+                    const h = requestAnimationFrame(e => this.paramine(e))
+                    this.setState(s => _.merge({}, s, j, {
+                        requestAnimationFrameH: h
+                    }))
                 })
-            })
+                .catch(e => { console.error('Balance request error', e) })
+            }, 0)
     }
     componentWillUnmount () {
         const handle = this.state.requestAnimationFrameH
@@ -91,36 +93,41 @@ class Profile extends React.Component<Props, State> {
     render () {
         const { props, state } = this
         const { balance } = state
-        const L = props.labels
         let x = new Date()
         x.setTime(balance.pzm.date)
         return (
-            <>
-                <Row>
+            <Row type='flex' justify='center'>
+                <Col xs={22} md={11}>
+                <Row style={{marginTop: 24}} gutter={24}>
                     <Col>
                         <BalanceInfo value={balance.pzm.value} currency="PZM"/>
                     </Col>
                     <Col>
-                        <Title level={3}>
-                            {`+`}
-                            {balance.pzm.para}
-                        </Title>
-                        <Text>
-                            {formatMessage({ id: 'general.startDate' })}
-                            {` `}
-                            {balance.pzm.date.toLocaleString()}
-                        </Text>
+                        <PzmParamineInfo
+                            value={balance.pzm.para}
+                            date={balance.pzm.date} />
                     </Col>
                 </Row>
-                <Row>
+                </Col>
+                <Col xs={22} md={11}>
+                <Row style={{ marginTop: 24}}>
                     <Col>
                         <BalanceInfo value={balance.rur.value} currency="₽"/>
                     </Col>
+                    <Col>
+                        <RurParamineInfo
+                            value={balance.rur.para}
+                            date={balance.rur.date}
+                            nextAccountingDate={balance.rur.nextDate}/>
+                    </Col>
                 </Row>
-            <pre style={{textAlign: 'left'}}>
-                {JSON.stringify(this.state, null, 4)}
-            </pre>
-            </>
+                <Row style={{marginTop: 40}}>
+                    <Col>
+                        <History />
+                    </Col>
+                </Row>
+            </Col>
+        </Row>
         )
     }
 }
