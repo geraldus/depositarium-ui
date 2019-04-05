@@ -50,7 +50,7 @@ export class AppNav extends React.Component<Props> {
                         {formatMessage({id: 'general.signout'})}
                     </a>
                 }
-                </Menu>
+            </Menu>
         )
     }
 }
