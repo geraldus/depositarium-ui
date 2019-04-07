@@ -2,13 +2,18 @@ import React from 'react'
 import { Form, Input, Icon } from 'antd'
 import { FormComponentProps } from 'antd/lib/form/Form'
 import { formatMessage } from 'umi-plugin-locale'
+import { connect } from 'dva'
 
+interface WithContext {
+    context: any
+}
 
-type Props = FormComponentProps & React.RefObject<HTMLElement>
+type Props = FormComponentProps & React.RefObject<HTMLElement> & WithContext
 
 export class SigninForm extends React.Component<Props> {
     render () {
         const { getFieldDecorator } = this.props.form
+        const errors = this.props.formErrors.map(e => new Error(e) )
         return (
             <Form>
                 <Form.Item>
@@ -28,12 +33,15 @@ export class SigninForm extends React.Component<Props> {
                                         style={{ color: 'rgba(0,0,0,.25)' }}
                                     />
                                 }
+
                                 placeholder={formatMessage({id: 'form.placeholder.username'})}
                                 />
                         )
                     }
                 </Form.Item>
-                <Form.Item>
+                <Form.Item
+                        validateStatus={this.props.formErrors.length > 0 ? 'error' : undefined}
+                        help={errors.map(x => x.message).join('; ')}>
                     { getFieldDecorator(
                         'password',
                         {
@@ -61,4 +69,8 @@ export class SigninForm extends React.Component<Props> {
     }
 }
 
-export const WrappedSigninForm = Form.create({ name: 'signin' })(SigninForm)
+const mapStateToProps = (state) => ({
+    formErrors: state.user.formErrors
+})
+
+export const WrappedSigninForm = connect(mapStateToProps)(Form.create({ name: 'signin' })(SigninForm))
