@@ -2,13 +2,6 @@ import mockjs from 'mockjs'
 
 
 export default {
-    'POST /auth/page/prizm-json-plugin/login': mockjs.mock({
-        'status': 'ok',
-        'data': {
-            'ident': 'geraldus',
-            'id': 1
-        }
-    }),
     'POST api/user/read/12': mockjs.mock({
         'email': 'heraldhoi@gmail.com',
         'accessRights': [
