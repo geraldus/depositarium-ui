@@ -116,7 +116,6 @@ class BasicLayout extends React.Component<Props, State> {
                                 </Content>
                             </CSSTransition>
                         </TransitionGroup>
-                        <pre>{JSON.stringify(this.props.user, null, 2)}</pre>
                         <Modal
                                 title={formatMessage({id: 'pageTitle.signin'})}
                                 visible={formVisible}
