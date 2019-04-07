@@ -20,9 +20,16 @@ body {
   transition: all 250ms ease-in;
 }
 
-.fade-exit {
-    scale: 1;
+/* .fade-exit {
+    transform: scale(1);
+    opacity: 1;
+    z-index: 0
 }
 .fade-exit.fade-exit-active {
-    scale: 0;
+    transition: all 250ms ease-in;
+    opacity: 0
+    transform: scale(0);
 }
+.fade-exit.fade-exit-done {
+    transform: scale(1);
+} */

@@ -109,13 +109,13 @@ class BasicLayout extends React.Component<Props, State> {
                                 handleSigninClick={e => this.signinFormShow(e)}
                                 />
                         </Header>
-                        <TransitionGroup>
-                            <CSSTransition key={location.pathname} classNames="fade" timeout={300}>
-                                <Content>
+                        {/* <TransitionGroup> */}
+                            {/* <CSSTransition key={location.pathname} classNames="fade" timeout={300}> */}
+                                <Content key={location.pathname}>
                                     {props.children}
                                 </Content>
-                            </CSSTransition>
-                        </TransitionGroup>
+                            {/* </CSSTransition> */}
+                        {/* </TransitionGroup> */}
                         <Modal
                                 title={formatMessage({id: 'pageTitle.signin'})}
                                 visible={formVisible}
