@@ -8,6 +8,16 @@ const config: IConfig =  {
       config.resolve.alias.set('@', path.resolve(__dirname, 'src'))
   },
   treeShaking: true,
+  proxy: {
+    '/auth': {
+      'changeOrigin': true,
+      'target': 'http://localhost:3000/'
+    },
+    '/api': {
+        'changeOrigin': true,
+        'target': 'http://localhost:3000/'
+    }
+  },
   plugins: [
     // ref: https://umijs.org/plugin/umi-plugin-react.html
     ['umi-plugin-react', {
@@ -16,11 +26,11 @@ const config: IConfig =  {
         immer: true
       },
       dynamicImport: { webpackChunkName: true },
-      title: 'mao',
+      title: 'IOA',
       dll: false,
       locale: {
         enable: true,
-        default: 'ru-RU',
+        default: 'ru-RU'
       },
       routes: {
         exclude: [
@@ -28,7 +38,7 @@ const config: IConfig =  {
           /services\//,
           /model\.(t|j)sx?$/,
           /service\.(t|j)sx?$/,
-          /components\//,
+          /components\//
         ],
       },
     }],
