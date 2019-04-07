@@ -35,7 +35,7 @@ const defaultState: Context = {
 
 const AuthContext = React.createContext({
     ...defaultState,
-    ...window.currentUser
+    // ...window.currentUser
 })
 
 console.log('!CTX!', window, window.currentUser)
@@ -43,14 +43,14 @@ console.log('!CTX!', window, window.currentUser)
 class AuthProvider extends React.Component<{}, Context> {
     readonly state = defaultState
     componentDidMount() {
-        if (window.currentUser) {
-            this.setState(window.currentUser)
-        }
+        // if (window.currentUser) {
+        //     this.setState(window.currentUser)
+        // }
     }
     componentDidUpdate() {
-        if (window.currentUser) {
-            this.setState(window.currentUser)
-        }
+        // if (window.currentUser) {
+        //     this.setState(window.currentUser)
+        // }
     }
     login = (creds: UserContext) => {
         console.log('UPDATE CONTEXT', creds)
@@ -63,14 +63,16 @@ class AuthProvider extends React.Component<{}, Context> {
         this.setState(defaultState)
     }
     render () {
-        console.log('CTX', window, window.currentUser)
+        console.log('CTX', window, window.currentUser, this.state)
         return (
             <AuthContext.Provider
-                    value={{
-                        ...this.state,
-                        login: this.login.bind(this),
-                        logout: this.logout
-                    }}>
+                    value={{stateFromContextProvider: this.state}}
+                    // value={{
+                    //     ...this.state,
+                    //     login: this.login.bind(this),
+                    //     logout: this.logout
+                    // }}>
+                    >
                 {this.props.children}
             </AuthContext.Provider>
         )
