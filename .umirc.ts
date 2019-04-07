@@ -1,11 +1,16 @@
 import { IConfig } from 'umi-types'
 import path from 'path'
 
+
 // ref: https://umijs.org/config/
 const config: IConfig =  {
   runtimePublicPath: true,
   chainWebpack: function (config, { webpack }) {
       config.resolve.alias.set('@', path.resolve(__dirname, 'src'))
+  },
+  theme: {
+    '@primary-color': '#a100ff',
+    'brand-primary': '#a100ff'
   },
   treeShaking: true,
   proxy: {
@@ -44,5 +49,6 @@ const config: IConfig =  {
     }],
   ],
 }
+
 
 export default config;
