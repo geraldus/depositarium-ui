@@ -21,7 +21,6 @@ export default modelExtend({
     reducers: {
         setCreds(state: State, action: ReduxAction) {
             const { payload } = action
-            console.log('setCread ACTION', state, action, state.signinFormVisible)
             return {
                 auth: true,
                 ...action.payload.data,
@@ -30,12 +29,12 @@ export default modelExtend({
             }
         },
         setSigninFormVisibility(state: State, action: ReduxAction) {
-            console.log(state, action)
             return {
                 ...state,
                 signinFormVisible: action.payload
             }
         }
+    },
 
     effects: {
         *info(action: ReduxAction, { call, put }: ReduxSagaEffects) {
