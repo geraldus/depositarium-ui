@@ -3,6 +3,7 @@ export default {
     'wallet.operations': 'Операции',
     'pageTitle.home': 'Главная',
     'pageTitle.signin': 'Вход',
+    'pageTitle.operator.profile': 'Мой кабинет',
     'general.cancel': 'Отмена',
     'general.signin': 'Войти',
     'general.signout': 'Выйти',
