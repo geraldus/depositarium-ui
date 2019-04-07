@@ -1,8 +1,10 @@
 import React from 'react'
+import { string } from 'prop-types';
 
-interface UserData {
+export interface UserData {
     id: number,
     name: string,
+    accessRights: string[],
     [propNames: string]: any
 }
 
@@ -41,7 +43,12 @@ console.log('!CTX!', window, window.currentUser)
 class AuthProvider extends React.Component<{}, Context> {
     readonly state = defaultState
     componentDidMount() {
-        if (window.currentUser && window.currentUser.auth) {
+        if (window.currentUser) {
+            this.setState(window.currentUser)
+        }
+    }
+    componentDidUpdate() {
+        if (window.currentUser) {
             this.setState(window.currentUser)
         }
     }
