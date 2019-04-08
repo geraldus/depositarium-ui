@@ -103,7 +103,6 @@ export default function request(options: any) {
     }
 
     return fetch(options).then((response: any) => {
-        console.log('success')
         let { statusText, status, data } = response
         return Promise.resolve({ //eslint-disable-line
             success: true,
@@ -114,7 +113,6 @@ export default function request(options: any) {
     }).catch((error) => {
         const { response, config = {} } = error
         const { data } = response
-        console.log('got error', error, response)
         let msg = data.message || error.message
         let success = true
         let statusCode
