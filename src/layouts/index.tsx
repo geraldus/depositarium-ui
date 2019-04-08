@@ -1,6 +1,6 @@
 import React, { createRef, ComponentPropsWithRef, ComponentProps } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
-import { Modal, Layout } from 'antd'
+import { Modal, Layout, Row, Col } from 'antd'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import AppNav from '@/containers/app-nav';
 import { AuthProvider, UserContext } from '@/contexts/AuthContext'
@@ -23,7 +23,7 @@ const defaultProps = {
         accessRights: [],
         signinFormVisible: false
     },
-    dispatch: () => {},
+    dispatch: () => { },
 }
 const initialState = {
     signinForm: false
@@ -41,13 +41,13 @@ class BasicLayout extends React.Component<Props, State> {
     static readonly defaultProps = defaultProps
     readonly state = initialState
     private signinFormRef = createRef<FormRef>()
-    componentDidMount () {
+    componentDidMount() {
         this.props.dispatch({ type: 'user/info' })
     }
-    saveSigninFormRef (formRef: FormRef) {
+    saveSigninFormRef(formRef: FormRef) {
         this.signinFormRef = formRef
     }
-    signinFormShow (e: React.MouseEvent<HTMLElement>) {
+    signinFormShow(e: React.MouseEvent<HTMLElement>) {
         e.preventDefault()
         this.props.dispatch({
             type: 'user/updateState',
@@ -56,7 +56,7 @@ class BasicLayout extends React.Component<Props, State> {
             }
         })
     }
-    handleSigninFormClose () {
+    handleSigninFormClose() {
         this.props.dispatch({
             type: 'user/updateState',
             payload: {
@@ -64,23 +64,25 @@ class BasicLayout extends React.Component<Props, State> {
             }
         })
     }
-    handleAuthResult (r, login: (e: UserContext) => void) {
+    handleAuthResult(r, login: (e: UserContext) => void) {
         const form = this.signinFormRef.props.form
         // TODO: Provide type for 'r'
         switch (r.status) {
             case 'fail':
-                form.setFields({ password: {
-                    value: form.getFieldValue('password'),
-                    errors: [new Error(r.message)]
-                }})
-            break
+                form.setFields({
+                    password: {
+                        value: form.getFieldValue('password'),
+                        errors: [new Error(r.message)]
+                    }
+                })
+                break
             case 'ok': {
                 login(r.data)
                 this.handleSigninFormClose()
             }
         }
     }
-    signin (e: React.FormEvent, login: (e: UserContext) => void) {
+    signin(e: React.FormEvent, login: (e: UserContext) => void) {
         const { dispatch } = this.props
         const form = this.signinFormRef.props.form
         form.validateFields((err, values) => {
@@ -92,48 +94,51 @@ class BasicLayout extends React.Component<Props, State> {
             }
         })
     }
-    render () {
+    render() {
         const { props } = this
         const { location } = props
         const formVisible = this.props.user.signinFormVisible
         return (
-                <AuthConsumer>
-                    {({ login, logout, ...auth }) => {
-                        const handleOk = (e) => {
-                            this.signin(e, login)
-                        }
-                        return(<Layout>
+            <AuthConsumer>
+                {({ login, logout, ...auth }) => {
+                    const handleOk = (e) => {
+                        this.signin(e, login)
+                    }
+                    return (<Layout>
                         <Header>
                             <AppNav
-                                { ...this.props.user }
+                                {...this.props.user}
                                 handleSigninClick={e => this.signinFormShow(e)}
-                                />
+                            />
                         </Header>
+
                         {/* <TransitionGroup> */}
-                            {/* <CSSTransition key={location.pathname} classNames="fade" timeout={300}> */}
-                                <Content key={location.pathname}>
-                                    {props.children}
-                                </Content>
-                            {/* </CSSTransition> */}
+                        {/* <CSSTransition key={location.pathname} classNames="fade" timeout={300}> */}
+                        <Content key={location.pathname}>
+                            {props.children}
+                        </Content>
+                        {/* </CSSTransition> */}
                         {/* </TransitionGroup> */}
+                        <pre>{JSON.stringify(this.props.user, null, 2)}</pre>
                         <Modal
-                                title={formatMessage({id: 'pageTitle.signin'})}
-                                visible={formVisible}
-                                centered
-                                destroyOnClose={true}
-                                okText={formatMessage({id: 'general.signin'})}
-                                cancelText={formatMessage({id: 'general.cancel'})}
-                                onOk={e => handleOk(e)}
-                                onCancel={e => this.handleSigninFormClose()} >
+                            title={formatMessage({ id: 'pageTitle.signin' })}
+                            visible={formVisible}
+                            centered
+                            destroyOnClose={true}
+                            okText={formatMessage({ id: 'general.signin' })}
+                            cancelText={formatMessage({ id: 'general.cancel' })}
+                            onOk={e => handleOk(e)}
+                            onCancel={e => this.handleSigninFormClose()} >
                             <WrappedSigninForm
                                 formErrors={this.props.formErrors}
                                 wrappedComponentRef={(ref: FormRef) => this.saveSigninFormRef(ref)} />
                         </Modal>
                         <Footer>© 2019 Internation Operator Association</Footer>
-                    </Layout>)}
+                    </Layout>)
                 }
-                </AuthConsumer>
-          )
+                }
+            </AuthConsumer>
+        )
     }
 }
 
@@ -153,7 +158,7 @@ const mapDispatchToProps = (dispatch) => {
 const AuthProvidedLayout = ({ location, children, dispatch, user }) => (
     <AuthProvider>
         <BasicLayout location={location} dispatch={dispatch} user={user}>
-            { children }
+            {children}
         </BasicLayout>
     </AuthProvider>
 )
