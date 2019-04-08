@@ -121,7 +121,7 @@ class BasicLayout extends React.Component<Props, State> {
                         <Modal
                             title={formatMessage({ id: 'pageTitle.signin' })}
                             visible={formVisible}
-                            centered
+                            centered={true}
                             destroyOnClose={true}
                             okText={formatMessage({ id: 'general.signin' })}
                             cancelText={formatMessage({ id: 'general.cancel' })}
@@ -133,8 +133,7 @@ class BasicLayout extends React.Component<Props, State> {
                         </Modal>
                         <Footer>© 2019 Internation Operator Association</Footer>
                     </Layout>)
-                }
-                }
+                }}
             </AuthConsumer>
         )
     }
