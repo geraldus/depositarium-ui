@@ -9,7 +9,8 @@ export interface UserData {
 
 export interface UserContext {
     auth: boolean,
-    user?: UserData
+    user?: UserData,
+    accessRights: string[]
 }
 
 export interface SigninFormContext {
@@ -28,6 +29,7 @@ declare global {
 const defaultState: Context = {
     auth: false,
     user: undefined,
+    accessRights: [],
     login: () => {},
     logout: () => {}
 }
