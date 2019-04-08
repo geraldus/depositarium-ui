@@ -4,6 +4,7 @@ import { postPluginAuthLogout, postAuthInfo, postPluginAuthLogin } from '@/servi
 import { modelExtend } from '@/utils/commonModel'
 import { ReduxSagaEffects, ReduxAction } from '@/interfaces'
 import { formatMessage } from 'umi-plugin-locale';
+import { mkIdent } from '@/utils/user';
 
 const initialState = Object.freeze({
     auth: false,
@@ -17,29 +18,23 @@ type State = typeof initialState & {
 }
 
 
+const guest = (state: State) => produce(state, draft => initialState)
+
 export default modelExtend({
     namespace: 'user',
 
     state: Object.freeze(initialState),
 
     reducers: {
+        setGuest: () => (initialState),
         setCreds(state: State, action: ReduxAction) {
-
-            const { firstName, lastName, patronymic } = action.payload
-            const fullName = [
-                `${lastName && lastName}`,
-                `${firstName && firstName}`,
-                `${patronymic && patronymic}`
-            ].join(' ')
-            const ident = fullName || action.payload.ident
             message.success([
-                formatMessage({ id: 'feedback.auth.authorizedAs' }),
-                ` ${ident}`
-            ].join(' ')
-            )
+                formatMessage({ id: 'feedback.auth.authorized-as' }),
+                mkIdent(action.payload)
+            ].join(' '))
             return {
                 auth: true,
-                ...action.payload.data,
+                ...action.payload,
                 signinFormVisible: false,
                 formErrors: []
             }
@@ -65,6 +60,7 @@ export default modelExtend({
             formData.append('username', payload['username'])
             formData.append('password', payload['password'])
             const result = yield call(postPluginAuthLogin, formData)
+            // console.log('got result', action, result, result.constructor)
             if (result.data.status) {
                 if (result.data.status == 'fail') {
                     yield put({
@@ -83,11 +79,10 @@ export default modelExtend({
                 }
             }
         },
-        *signout({ payload }: ReduxAction, { call, put }: ReduxSagaEffects) {
+        *signout({ }, { call, put }: ReduxSagaEffects) {
             yield call(postPluginAuthLogout)
             yield put({
-                type: 'updateState',
-                payload: initialState
+                type: 'setGuest'
             });
         },
     },
