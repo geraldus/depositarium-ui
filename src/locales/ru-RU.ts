@@ -17,5 +17,8 @@ export default {
     'form.error.usernameRequired': 'Укажите логин для входа',
     'form.error.passwordRequired': 'Введите пароль',
     'form.placeholder.username': 'Эл.адрес или логин',
-    'form.placeholder.password': 'Пароль'
+    'form.placeholder.password': 'Пароль',
+    'manage.userMenuGroupTitle': 'Пользователи',
+    'manage.user.list.page.title': 'Все пользователи',
+    'feedback.auth.authorizedAs': 'Вы вошли как'
 }
