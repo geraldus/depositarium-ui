@@ -1,16 +1,20 @@
 import produce from 'immer'
+import { message } from 'antd'
 import { postPluginAuthLogout, postAuthInfo, postPluginAuthLogin } from '@/services/user'
 import { modelExtend } from '@/utils/commonModel'
 import { ReduxSagaEffects, ReduxAction } from '@/interfaces'
+import { formatMessage } from 'umi-plugin-locale';
 
 const initialState = {
     auth: false,
     accessRights: [],
     signinFormVisible: false,
-    formErrors: []
+    formErrors: [],
 }
 
-type State = typeof initialState
+type State = typeof initialState & {
+    ['properties']: any
+}
 
 
 export default modelExtend({
@@ -20,7 +24,19 @@ export default modelExtend({
 
     reducers: {
         setCreds(state: State, action: ReduxAction) {
-            const { payload } = action
+
+            const { firstName, lastName, patronymic } = action.payload
+            const fullName = [
+                `${lastName && lastName}`,
+                `${firstName && firstName}`,
+                `${patronymic && patronymic}`
+            ].join(' ')
+            const ident = fullName || action.payload.ident
+            message.success([
+                formatMessage({ id: 'feedback.auth.authorizedAs' }),
+                ` ${ident}`
+            ].join(' ')
+            )
             return {
                 auth: true,
                 ...action.payload.data,
@@ -29,10 +45,7 @@ export default modelExtend({
             }
         },
         setSigninFormVisibility(state: State, action: ReduxAction) {
-            return {
-                ...state,
-                signinFormVisible: action.payload
-            }
+            state.signinFormVisible = action.payload
         }
     },
 
@@ -42,7 +55,7 @@ export default modelExtend({
             yield put({
                 type: 'updateState',
                 payload: {
-                    ... result.data,
+                    ...result.data,
                 }
             })
         },
@@ -66,7 +79,7 @@ export default modelExtend({
                     if (result.data.status == 'ok') {
                         yield put({
                             type: 'setCreds',
-                            payload: result.data,
+                            payload: result.data.data,
 
                         })
                     }
