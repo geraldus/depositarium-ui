@@ -15,10 +15,16 @@ export async function postPluginAuthLogout() {
 }
 
 export async function postPluginAuthLogin(payload) {
-    console.log('ASYNC AUTH', payload)
     return request({
         url: '/auth/page/prizm-json-plugin/login',
         method: 'post',
         data: payload
     });
+}
+
+export async function postFetchAll(payload) {
+    return request({
+        url: '/api/user/list',
+        method: 'post'
+    })
 }
