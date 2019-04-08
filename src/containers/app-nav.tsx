@@ -96,12 +96,6 @@ const mapStateToProps = (state: State) => {
     return (state.user)
 }
 
-const mapDispatchToProps = (dispatch: HaveDispatch) => {
-    return ({
-        dispatch: dispatch
-    })
-}
-
 export default connect(mapStateToProps)(AppNav)
 
 const hasRights = (accessRights: string[], accessTypes: string[]): boolean =>

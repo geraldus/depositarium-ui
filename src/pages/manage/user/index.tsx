@@ -3,7 +3,7 @@ import React from 'react'
 import { connect } from 'dva'
 import { HaveDispatch } from '@/interfaces';
 import { UserData } from '@/contexts/AuthContext';
-import { HaveUserList, default as View } from './containers/index'
+import { HaveUserList, default as View } from '@/containers/user/list'
 
 type Props = HaveDispatch
 
@@ -21,7 +21,6 @@ export class UserListView extends React.Component<Props, State> {
     static readonly defaultProps: Props = defaultProps
     readonly state:State = initialState
     render () {
-        console.log('component view')
         return (<>
             <View/>
             <pre>
