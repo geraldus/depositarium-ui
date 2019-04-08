@@ -20,5 +20,6 @@ export default {
     'form.placeholder.password': 'Пароль',
     'manage.userMenuGroupTitle': 'Пользователи',
     'manage.user.list.page.title': 'Все пользователи',
-    'feedback.auth.authorizedAs': 'Вы вошли как'
+    'feedback.auth.authorized-as': 'Вы вошли как',
+    'feedback.auth.signed-out.goodbye-text': 'До встречи,'
 }
