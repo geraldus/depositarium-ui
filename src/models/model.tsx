@@ -5,12 +5,12 @@ import { modelExtend } from '@/utils/commonModel'
 import { ReduxSagaEffects, ReduxAction } from '@/interfaces'
 import { formatMessage } from 'umi-plugin-locale';
 
-const initialState = {
+const initialState = Object.freeze({
     auth: false,
     accessRights: [],
     signinFormVisible: false,
     formErrors: [],
-}
+})
 
 type State = typeof initialState & {
     ['properties']: any
@@ -65,7 +65,6 @@ export default modelExtend({
             formData.append('username', payload['username'])
             formData.append('password', payload['password'])
             const result = yield call(postPluginAuthLogin, formData)
-            console.log('got result', result, result.constructor)
             if (result.data.status) {
                 if (result.data.status == 'fail') {
                     yield put({
@@ -78,9 +77,7 @@ export default modelExtend({
                 } else {
                     if (result.data.status == 'ok') {
                         yield put({
-                            type: 'setCreds',
-                            payload: result.data.data,
-
+                            type: 'setCreds', payload: result.data.data,
                         })
                     }
                 }
