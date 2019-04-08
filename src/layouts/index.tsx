@@ -1,22 +1,19 @@
-import React, { createRef, ComponentPropsWithRef, ComponentProps } from 'react'
+import React, { createRef, ComponentPropsWithRef } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
+// import { WidthProvider } from 'react-grid-layout'
 import { Modal, Layout, Row, Col } from 'antd'
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import { formatMessage } from 'umi-plugin-locale'
+import { connect } from 'dva'
+import withRouter from 'umi/withRouter';
 import AppNav from '@/containers/app-nav';
 import { AuthProvider, UserContext } from '@/contexts/AuthContext'
 import { AuthConsumer, AuthContext } from '@/contexts/AuthContext'
 import { WrappedSigninForm, SigninForm } from '@/containers/form/signin'
-
-import withRouter from 'umi/withRouter';
 import _ from 'lodash'
-import { formatMessage } from 'umi-plugin-locale'
-import { connect } from 'dva'
 
 import styles from 'antd/dist/antd.css'
-import { stat } from 'fs';
 
 const { Header, Content, Footer } = Layout
-
 
 const defaultProps = {
     user: {
@@ -35,6 +32,7 @@ type Props =
     & ComponentPropsWithRef<any>
 type FormRef = React.RefObject<SigninForm> & React.ComponentPropsWithoutRef<SigninForm>
 type State = typeof initialState
+
 
 class BasicLayout extends React.Component<Props, State> {
     static contextType = AuthContext
