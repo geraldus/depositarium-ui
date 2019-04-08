@@ -18,10 +18,10 @@ const fetch = (options) => {
         url,
     } = options
     let cloneData = typeof data === typeof undefined
-            ? {}
-            : data.constructor === FormData
-                ? data
-                : lodash.cloneDeep(data) || {}; //eslint-disable-line
+        ? {}
+        : data.constructor === FormData
+            ? data
+            : lodash.cloneDeep(data) || {}; //eslint-disable-line
     try {
         let domin = ''
         if (url.match(/[a-zA-z]+:\/\/[^/]*/)) {
@@ -56,8 +56,8 @@ const fetch = (options) => {
     }
 
     let headers = cloneData.constructor === FormData
-            ? { 'Content-Type': 'multipart/form-data' }
-            : {}
+        ? { 'Content-Type': 'multipart/form-data' }
+        : {}
 
     switch (method.toLowerCase()) {
         case 'get':
@@ -70,15 +70,14 @@ const fetch = (options) => {
                 data: cloneData,
             })
         case 'post':
-            console.log('return axios')
             return axios({
-                    method: 'post',
-                    url: url,
-                    data: cloneData,
-                    config: {
-                        headers: headers
-                    }
-                })
+                method: 'post',
+                url: url,
+                data: cloneData,
+                config: {
+                    headers: headers
+                }
+            })
         case 'put':
             return axios.put(url, cloneData)
         case 'patch':
@@ -124,9 +123,26 @@ export default function request(options: any) {
         } else {
             statusCode = 600
             msg = error.message || 'Network Error'
+            message.error(msg)
             return Promise.reject({ success: false, statusCode, message: msg, url: config.url })
         }
-        console.log('return promise')
-        return Promise.resolve({ success: success, statusCode, message: msg, data: data })
+        success = !(
+            response.statusText.constructor == String &&
+            response.data.constructor == String
+        )
+        if (!success) {
+            if (response.data) {
+                message.error(response.data)
+            }
+            if (msg) {
+                message.error(msg)
+            }
+        }
+        return Promise.resolve({
+            success: success,
+            statusCode,
+            message: msg,
+            data: success? data : undefined
+        })
     })
 }
