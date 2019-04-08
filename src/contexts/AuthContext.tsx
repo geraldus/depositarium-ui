@@ -1,5 +1,4 @@
 import React from 'react'
-import { string } from 'prop-types';
 
 export interface UserData {
     id: number,
@@ -38,7 +37,6 @@ const AuthContext = React.createContext({
     // ...window.currentUser
 })
 
-console.log('!CTX!', window, window.currentUser)
 
 class AuthProvider extends React.Component<{}, Context> {
     readonly state = defaultState
@@ -53,7 +51,6 @@ class AuthProvider extends React.Component<{}, Context> {
         // }
     }
     login = (creds: UserContext) => {
-        console.log('UPDATE CONTEXT', creds)
         this.setState({
             ...creds,
             auth: true
@@ -63,7 +60,6 @@ class AuthProvider extends React.Component<{}, Context> {
         this.setState(defaultState)
     }
     render () {
-        console.log('CTX', window, window.currentUser, this.state)
         return (
             <AuthContext.Provider
                     value={{stateFromContextProvider: this.state}}
