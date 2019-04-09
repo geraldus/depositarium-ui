@@ -5,12 +5,13 @@ import { HaveDispatch } from '@/interfaces';
 import { UserData } from '@/contexts/AuthContext';
 import { HaveUserList, default as View } from '@/containers/user/list'
 
-type Props = HaveDispatch
+type Props = HaveUserList & HaveDispatch
 
 type State = HaveUserList
 
 const defaultProps: Props = Object.freeze({
-    dispatch: () => {}
+    dispatch: () => { },
+    list: []
 })
 
 const initialState = Object.freeze({
@@ -19,10 +20,13 @@ const initialState = Object.freeze({
 
 export class UserListView extends React.Component<Props, State> {
     static readonly defaultProps: Props = defaultProps
-    readonly state:State = initialState
-    render () {
+    readonly state: State = initialState
+    componentDidMount() {
+        this.props.dispatch({ type: 'user.manage/list' })
+    }
+    render() {
         return (<>
-            <View/>
+            <View list={this.props.list}/>
             <pre>
                 STATE: {}
                 {JSON.stringify(this.state, null, 2)}
@@ -31,4 +35,11 @@ export class UserListView extends React.Component<Props, State> {
     }
 }
 
-export default connect()(UserListView)
+const mapStateToProps = (state, prevProps) => {
+    console.log(state, prevProps)
+    return ({
+        list: state['user.manage'].list
+    })
+}
+
+export default connect(mapStateToProps)(UserListView)
