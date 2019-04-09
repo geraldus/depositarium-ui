@@ -33,12 +33,15 @@ const initialState = {
             para: 0
         }
     },
-    requestAnimationFrameH: -1,
     test: ''
 }
 
+interface Animatable {
+    requestAnimationFrameH?: number
+}
 
-type State = Readonly<typeof initialState>
+
+type State = Readonly<typeof initialState> & Animatable
 
 
 class Profile extends React.Component<State> {
@@ -86,7 +89,7 @@ class Profile extends React.Component<State> {
     }
     componentWillUnmount () {
         const handle = this.state.requestAnimationFrameH
-        if (handle !== -1) {
+        if (handle && handle !== -1) {
             cancelAnimationFrame(handle)
         }
     }

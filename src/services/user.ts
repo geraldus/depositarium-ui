@@ -28,3 +28,4 @@ export async function postFetchAll(payload) {
         method: 'post'
     })
 }
+

@@ -27,10 +27,6 @@ export class UserListView extends React.Component<Props, State> {
     render() {
         return (<>
             <View list={this.props.list}/>
-            <pre>
-                STATE: {}
-                {JSON.stringify(this.state, null, 2)}
-            </pre>
         </>)
     }
 }

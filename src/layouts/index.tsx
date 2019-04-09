@@ -1,7 +1,7 @@
 import React, { createRef, ComponentPropsWithRef } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 // import { WidthProvider } from 'react-grid-layout'
-import { Modal, Layout, Row, Col } from 'antd'
+import { Modal, Layout } from 'antd'
 import { formatMessage } from 'umi-plugin-locale'
 import { connect } from 'dva'
 import withRouter from 'umi/withRouter';
@@ -110,14 +110,9 @@ class BasicLayout extends React.Component<Props, State> {
                             />
                         </Header>
 
-                        {/* <TransitionGroup> */}
-                        {/* <CSSTransition key={location.pathname} classNames="fade" timeout={300}> */}
                         <Content key={location.pathname}>
                             {props.children}
                         </Content>
-                        {/* </CSSTransition> */}
-                        {/* </TransitionGroup> */}
-                        <pre>{JSON.stringify(this.props.user, null, 2)}</pre>
                         <Modal
                             title={formatMessage({ id: 'pageTitle.signin' })}
                             visible={formVisible}
