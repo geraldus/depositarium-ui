@@ -2,7 +2,11 @@ import React from 'react'
 
 export interface UserData {
     id: number,
-    name: string,
+    ident: string,
+    email?: string,
+    lastName?: string,
+    firstName?: string,
+    patronymic?: string,
     accessRights: string[],
     [propNames: string]: any
 }
@@ -30,8 +34,8 @@ const defaultState: Context = {
     auth: false,
     user: undefined,
     accessRights: [],
-    login: () => {},
-    logout: () => {}
+    login: () => { },
+    logout: () => { }
 }
 
 const AuthContext = React.createContext({
@@ -61,16 +65,16 @@ class AuthProvider extends React.Component<{}, Context> {
     logout = () => {
         this.setState(defaultState)
     }
-    render () {
+    render() {
         return (
             <AuthContext.Provider
-                    value={{stateFromContextProvider: this.state}}
-                    // value={{
-                    //     ...this.state,
-                    //     login: this.login.bind(this),
-                    //     logout: this.logout
-                    // }}>
-                    >
+                value={{ stateFromContextProvider: this.state }}
+            // value={{
+            //     ...this.state,
+            //     login: this.login.bind(this),
+            //     logout: this.logout
+            // }}>
+            >
                 {this.props.children}
             </AuthContext.Provider>
         )
